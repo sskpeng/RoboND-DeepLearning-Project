@@ -32,7 +32,7 @@ A typical FCN is composited of the following three blocks:
 
 The **encoder blocks** extract features for the image. It is extracting more complex features from layer to layer. For example, the first layer might only look at lines or edges, next layer might look for circules, boxes, and the following layer might look for more complex geometries. 
 
-**1 by 1 convolution** used on every pixel to transform feature maps to class-wise predictions. This helps in pixel-wise classification.
+**1 by 1 convolution** used on every pixel to transform feature maps to class-wise predictions. This helps in pixel-wise classification. In the conventional CNNs, we usually flatten the output into a fully connected layer into a 2D tensor, which results in the loss of spatial information, because no information about the location of the pixels is preserved. Hence, the 1x1 convolution is used to replace the fully connected layer and connect the encoder and decoder layer.
 
 The **decoder blocks** upscale the output back to the size of the original image. The result is a segmentation information for every pixel in the image. So called skip connections is used to connect corresponding encoder layer and decoder layer (to match the layer size) to retrieves lost spatial information during Encoding. 
 
@@ -71,22 +71,22 @@ FCN is implemeted in the provided notebook and the `encoder_block`, `decoder_blo
 ![alt text][image4] 
 
 ## Experiments Results
-The following hyperparameters are used to traing the network, and the corresponding test result results are shown.
+The following hyperparameters are used to traing the network, and the corresponding test results are shown. Note that the run number shown on the table below is not the same as the training data set in the repository.
 
-|                | run_1   | run_2   | run_3  | run_4  |
-|:---------------|:-------:|:-------:| ------:| ------:|
-|Learning rate   | 0.02    | 0.005   | 0.005  | 0.005  |
-|Batch size      | 128     | 128     | 32     | 32     |
-|Num of Epochs   | 5       | 10      | 10     | 50     |
-|Steps per Epochs| 200     | 500     | 100    | 100    |
-|Validation Steps| 50      | 50      | 50     | 50     |
-|Workers         | 2       | 2       | 5      | 5      |
-|Final IoU       | 0.5389  | 0.5389  | 0.4650 | 0.5537 |
-|Final Score     | 0.3785  | 0.3785  | 0.3255 | 0.4109 |
+|                | run 1  | run 2  | run 3  | run 4  |
+|:---------------|:------:|:------:| ------:| ------:|
+|Learning rate   | 0.02   | 0.005  | 0.005  | 0.003  |
+|Batch size      | 128    | 32     | 32     | 32     |
+|Num of Epochs   | 5      | 10     | 50     | 100    |
+|Steps per Epochs| 200    | 100    | 100    | 100    |
+|Validation Steps| 50     | 50     | 50     | 50     |
+|Workers         | 2      | 5      | 5      | 5      |
+|Final IoU       | 0.5389 | 0.4650 | 0.5213 | 0.5576 |
+|Final Score     | 0.3785 | 0.3255 | 0.3889 | 0.4028 |
 
-The following validation results were generated in run_4.
+The following validation results were generated in run 4.
 
-Here is the training curves showing the loss in 50 epochs.
+Here is the training curves showing the loss in 100 epochs.
 ![alt text][image5]
 
 Testing of following the target.
@@ -102,7 +102,7 @@ Final score and IoU calculation.
 ![alt text][image9]
 
 ### Improvement
-The hyoerparameters above are able to achieve 0.41 to pass the target score. It is still very possible to improve the proformance by tuning the parameters. For example, increasing the num of epochs,  reducing the learning rate, and reducing the steps per epochs. It is also possible to gain better training scores by using better quality pictures with higher resolution.
+The hyoerparameters above are able to achieve 0.4 to pass the target score. It is still very possible to improve the proformance by tuning the parameters. For example, increasing the num of epochs,  reducing the learning rate, and reducing the steps per epochs. It is also possible to gain better training scores by using better quality pictures with higher resolution.
 
 ### Changes needed for identifying new objects
-The model trained in this exercise identifies humans in red shirt. To identify any new objects like car, cat, dog, new classes of data for those models will be needed.
+The model trained in this exercise identifies humans in red shirt. To identify any new objects like car, cat, dog, new classes of data for those models will be needed. Even if multiple classes of models are provided for cars, animals, or other objects, and the models are pre-trained, the current network architecture might still not be able to process the computation simutaniously. More components or some massive cloud system is needed to achieve the novel classifier in this level. 
